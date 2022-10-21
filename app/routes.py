@@ -1,5 +1,6 @@
 
-from flask import Blueprint
+from turtle import title
+from flask import Blueprint, jsonify
 
 hello_world_bp = Blueprint("hello_world_bp", __name__)
 
@@ -28,3 +29,28 @@ def broken_endpoint():
     new_hobby = "Surfing"
     response_body["hobbies"].append(new_hobby)
     return response_body
+
+class Book:
+    def __init__(self, id, title, description):
+        self.id = id
+        self.title = title
+        self.description = description
+    
+books = [
+    Book(1, "People We Meet On Vacation", "A romance novel"),
+    Book(2, "Things We Never Got Over", "A romance novel"),
+    Book(3, "Book Lovers", "A romance novel")
+]
+
+books_bp = Blueprint("books", __name__, url_prefix="/books")
+
+@books_bp.route("", methods=["GET"])
+def handle_books():
+    books_response = []
+    for book in books:
+        books_response.append({
+            "id": book.id,
+            "title": book.title,
+            "description": book.description
+        })
+    return jsonify(books_response)
